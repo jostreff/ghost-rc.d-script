@@ -1,0 +1,77 @@
+#!/bin/sh
+
+# PM2 Startup script
+# Source: https://0x0a14.de/pm2-startup-script-for-freebsd/
+# Made by: Johannes Tonn
+#
+# Download this file
+# cd /usr/local/etc/rc.d && fetch https://gist.github.com/457769f2090c6b69cd9d
+#
+# Source: https://ostreff.info/pm2-rcd
+# Modifications to use sudo by: Jordan Ostreff
+#
+# Make the file executable with:
+# /usr/local/etc/rc.d/pm2 (chmod +x)
+#
+# add to /etc/rc.conf
+#
+# pm2_enable="YES"
+# pm2_user="freebsd"
+# pm2_home="/home/freebsd"
+
+
+# PROVIDE: pm2
+# REQUIRE: NETWORK mongod mysql-server
+# KEYWORD: shutdown
+#
+
+. /etc/rc.subr
+
+export PATH=$PATH:/usr/local/bin
+export NODE_ENV="production"
+
+name=pm2
+rcvar=pm2_enable
+
+PM2=/usr/local/lib/node_modules/pm2/bin/pm2
+
+load_rc_config $name
+
+start_cmd="pm2_start"
+stop_cmd="pm2_stop"
+restart_cmd="pm2_reload"
+describe_cmd="pm2_ls"
+
+: ${pm2_user="freebsd"}
+: ${pm2_home="/home/freebsd"}
+: ${pm2_enable="NO"}
+
+pm2_start()
+{
+        CMD="$PM2 resurrect"
+        /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
+}
+
+pm2_stop()
+{
+        CMD="${PM2} dump"
+        /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
+        CMD="${PM2} delete all"
+        /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
+        CMD="${PM2} kill"
+        /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
+}
+
+pm2_ls()
+{
+        CMD="${PM2} ls"
+        /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
+}
+
+pm2_reload()
+{
+        CMD="$PM2 reload all"
+        /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
+}
+
+run_rc_command "$1"
