@@ -9,6 +9,8 @@
 #
 # Source: https://ostreff.info/pm2-rcd
 # Modifications to use sudo by: Jordan Ostreff
+# Download this file
+# cd /usr/local/etc/rc.d && fetch https://raw.githubusercontent.com/jostreff/ghost-rc.d-script/main/pm2 -o pm2
 #
 # Make the file executable with:
 # /usr/local/etc/rc.d/pm2 (chmod +x)
