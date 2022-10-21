@@ -7,8 +7,6 @@
 # Download this file
 # cd /usr/local/etc/rc.d && fetch https://gist.github.com/457769f2090c6b69cd9d
 #
-# Source: https://ostreff.info/pm2-rcd
-# Modifications to use sudo by: Jordan Ostreff
 # Download this file
 # cd /usr/local/etc/rc.d && fetch https://raw.githubusercontent.com/jostreff/ghost-rc.d-script/main/pm2 -o pm2
 #
@@ -20,30 +18,28 @@
 # pm2_enable="YES"
 # pm2_user="ghost"
 #
-# PROVIDE: pm2
-# REQUIRE: NETWORK mongod mysql-server
 # KEYWORD: shutdown
 #
 
 . /etc/rc.subr
 
-export PATH=$PATH:/usr/local/bin
-export NODE_ENV="production"
+: ${pm2_user="ghost"}
+: ${pm2_enable="NO"}
 
 name=pm2
 rcvar=pm2_enable
 
+export PATH=$PATH:/usr/local/bin
+export NODE_ENV="production"
 PM2=/usr/local/lib/node_modules/pm2/bin/pm2
 
 load_rc_config $name
-
+extra_commands="status"
 start_cmd="pm2_start"
 stop_cmd="pm2_stop"
 restart_cmd="pm2_reload"
 describe_cmd="pm2_ls"
-
-: ${pm2_user="ghost"}
-: ${pm2_enable="NO"}
+status_cmd="pm2_show"
 
 pm2_start()
 {
@@ -64,6 +60,12 @@ pm2_stop()
 pm2_ls()
 {
         CMD="${PM2} ls"
+        /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
+}
+
+pm2_show()
+{
+        CMD="${PM2} show 0"
         /usr/local/bin/sudo -u ${pm2_user} -s ${CMD}
 }
 
