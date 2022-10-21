@@ -18,10 +18,8 @@
 # add to /etc/rc.conf
 #
 # pm2_enable="YES"
-# pm2_user="freebsd"
-# pm2_home="/home/freebsd"
-
-
+# pm2_user="ghost"
+#
 # PROVIDE: pm2
 # REQUIRE: NETWORK mongod mysql-server
 # KEYWORD: shutdown
@@ -44,8 +42,7 @@ stop_cmd="pm2_stop"
 restart_cmd="pm2_reload"
 describe_cmd="pm2_ls"
 
-: ${pm2_user="freebsd"}
-: ${pm2_home="/home/freebsd"}
+: ${pm2_user="ghost"}
 : ${pm2_enable="NO"}
 
 pm2_start()
